@@ -2,11 +2,6 @@
 
 This repository contains a Telegram bot built with grammy.
 
-## Context
-
-DoneCraftBot is a checklist-based task manager.
-Primary UX is message → checklist.
-
 ---
 
 ## Coding rules

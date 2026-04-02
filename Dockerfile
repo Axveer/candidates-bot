@@ -1,13 +1,25 @@
-FROM node:lts-slim
+FROM node:lts-slim AS builder
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+WORKDIR /app
 
-WORKDIR /home/node/app
+COPY package*.json ./
+RUN npm ci
+
+COPY tsconfig.json ./
+COPY src ./src
+RUN npm run build
+
+# ---
+
+FROM node:lts-slim AS runner
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY --from=builder /app/dist ./dist
 
 USER node
 
-COPY --chown=node:node . .
-
-RUN npm install
-
-CMD [ "npm", "run", "distribute" ]
+CMD ["npm", "start"]
